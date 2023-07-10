@@ -1,0 +1,3 @@
+activity_id,activity_name,activity_type_code,activity_type_name,start_date,original_amount_30d,activity_reduce_amount_30d,dt
+2,Apple品牌日,3101,满额减价,2020-06-10,3388997.00,110100.00,2020-06-14
+1,联想专场,3101,满额减价,2020-10-21,1640057.00,70076.62,2020-06-14

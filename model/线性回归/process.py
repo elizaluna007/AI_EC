@@ -173,48 +173,53 @@ for i, j in date_2.items():
 
 print(traffic_stats_by_channel)
 
-l = 0
-m = 0
-result = [[]for i in range(8)]
-for i, j in traffic_stats_by_channel.items():
-    print(i)
-    for k, v in j.items():
-        result[l].append(v[0])
-        m = m+1
-        print(k, v)
-    l = l+1
+with open(r'...\..\src\result.csv', 'w', encoding='utf-8', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerows(traffic_stats_by_channel.items())
 
-print(result)
+# l = 0
+# m = 0
+# result = [[]for i in range(8)]
+# for i, j in traffic_stats_by_channel.items():
+#     print(i)
+#     for k, v in j.items():
+#         result[l].append(v[0])
+#         m = m+1
+#         print(k, v)
+#     l = l+1
+
+# print(result)
 
 
-# 给定的数据序列
-data = result[0]  # 选择其中一个渠道的数据
 
-# 创建输入特征和目标变量
-X = [[i] for i in range(len(data))]
-y = data
+# # 给定的数据序列
+# data = result[0]  # 选择其中一个渠道的数据
 
-# 创建线性回归模型并进行训练
-model = LinearRegression()
-model.fit(X, y)
+# # 创建输入特征和目标变量
+# X = [[i] for i in range(len(data))]
+# y = data
 
-# 预测下一条数据
-next_value = model.predict([[len(data)]])
+# # 创建线性回归模型并进行训练
+# model = LinearRegression()
+# model.fit(X, y)
 
-print("预测的下一条数据为:", int(next_value[0]))
+# # 预测下一条数据
+# next_value = model.predict([[len(data)]])
 
-# 给定的数据序列
-data = result[1]  # 选择其中一个渠道的数据
+# print("预测的下一条数据为:", int(next_value[0]))
 
-# 创建输入特征和目标变量
-X = [[i] for i in range(len(data))]
-y = data
+# # 给定的数据序列
+# data = result[1]  # 选择其中一个渠道的数据
 
-# 创建线性回归模型并进行训练
-model = LinearRegression()
-model.fit(X, y)
+# # 创建输入特征和目标变量
+# X = [[i] for i in range(len(data))]
+# y = data
 
-# 预测下一条数据
-next_value = model.predict([[len(data)]])
+# # 创建线性回归模型并进行训练
+# model = LinearRegression()
+# model.fit(X, y)
 
-print("预测的下一条数据为:", int(next_value[0]))
+# # 预测下一条数据
+# next_value = model.predict([[len(data)]])
+
+# print("预测的下一条数据为:", int(next_value[0]))

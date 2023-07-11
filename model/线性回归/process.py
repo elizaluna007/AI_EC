@@ -99,29 +99,78 @@ from sklearn.linear_model import LinearRegression
 traffic_stats_by_channel = {}
 
 date_0 = [[]for i in range(15)]
-
+date_1 = {}
+date_2 = {}
 # 购物车全量数据，如果添加该商品，就加1，如果下单，就加1
 with open(r'...\..\data\gmall_ods_log_inc.csv', 'r', encoding='utf-8') as file:
     reader = csv.reader(file)
     next(reader)  # 跳过标题行
 
     for row in reader:
-        data = json.loads(row[0])
-        mid = data.get('mid')
-        ch = data.get('ch')
+        print(row)
+        print(row[1])
+        common = json.loads(row[0])
+        if(row[1]!=''):
+            page = json.loads(row[1])
+        else:
+            page = {'during_time':'0'}
+            
+        mid = common.get('mid')
+        ch = common.get('ch')
+        during_time = int(page.get('during_time'))
         dt = int(row[7].split('/')[-1])
 
         if (ch not in traffic_stats_by_channel):
             traffic_stats_by_channel[ch] = {}
+            date_1[ch] = {}
+            date_2[ch] = {}
         if (row[7] not in traffic_stats_by_channel[ch]):
             traffic_stats_by_channel[ch][row[7]] = [0, 0, 0, 0, 0]
+            date_1[ch][row[7]] = {}
+            date_2[ch][row[7]] = {}
 
+        # 每个会话平均浏览页面数
+        if (mid not in date_1[ch][row[7]]):
+            date_1[ch][row[7]][mid] = 1
+        else:
+            date_1[ch][row[7]][mid] = date_1[ch][row[7]][mid]+1
+
+        # 会话平均停留时长
+        if (mid not in date_2[ch][row[7]]):
+            date_2[ch][row[7]][mid] = during_time
+        else:
+            date_2[ch][row[7]][mid] = date_2[ch][row[7]][mid]+during_time
+
+        # 访问人数
         for i in range(len(date_0[dt])):
             if (date_0[dt][i] == mid):
                 continue
         date_0[dt].append(mid)
         traffic_stats_by_channel[ch][row[7]
                                      ][0] = traffic_stats_by_channel[ch][row[7]][0]+1
+
+# i是品牌ch，k是日期，m是mid，n是页面数
+date00 = 0
+date01 = 0
+for i, j in date_1.items():
+    date00 = date00+1
+    for k, v in j.items():
+        for m, n in v.items():
+            date01 = date01+n
+        traffic_stats_by_channel[i][k][2] = int(date01/date00)
+
+# i是品牌ch，k是日期，m是mid，n是页面浏览时间
+date00 = 0
+date01 = 0
+for i, j in date_2.items():
+    date00 = date00+1
+    for k, v in j.items():
+        for m, n in v.items():
+            date01 = date01+n
+        traffic_stats_by_channel[i][k][1] = int(date01/date00)
+        
+
+
 print(traffic_stats_by_channel)
 
 l = 0
@@ -140,6 +189,22 @@ print(result)
 
 # 给定的数据序列
 data = result[0]  # 选择其中一个渠道的数据
+
+# 创建输入特征和目标变量
+X = [[i] for i in range(len(data))]
+y = data
+
+# 创建线性回归模型并进行训练
+model = LinearRegression()
+model.fit(X, y)
+
+# 预测下一条数据
+next_value = model.predict([[len(data)]])
+
+print("预测的下一条数据为:", int(next_value[0]))
+
+# 给定的数据序列
+data = result[1]  # 选择其中一个渠道的数据
 
 # 创建输入特征和目标变量
 X = [[i] for i in range(len(data))]
